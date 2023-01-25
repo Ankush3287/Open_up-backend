@@ -11,7 +11,7 @@ const server = require("http").createServer(app);
 /**Web socket setup */
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.REACT_BASE_URL,
     methods: ["GET", "POST"],
   },
 });
@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 const corsOption = {
   credentials: true,
-  origin: ["http://localhost:3000"],
+  origin: [process.env.REACT_BASE_URL],
 };
 app.use(cors(corsOption));
 
