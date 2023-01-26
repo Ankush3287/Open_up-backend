@@ -11,21 +11,6 @@ class ActivateController {
       res.status(400).json({ message: "All fields are required" });
     }
 
-    /**Making img from base 64 img */
-    const buffer = Buffer.from(
-      avatar.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
-      "base64"
-    );
-    const imagePath = `${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
-    try {
-      const jimpResp = await Jimp.read(buffer);
-      jimpResp
-        .resize(150, Jimp.AUTO)
-        .write(path.resolve(__dirname, `../storage/${imagePath}`));
-    } catch (err) {
-      res.status(500).json({ message: "Could not process the image" });
-    }
-
     /**Updating user */
     const userId = req.user._id; //We have attached userdata to req object in middleware
     try {
@@ -35,7 +20,7 @@ class ActivateController {
       }
       user.activated = true;
       user.name = name;
-      user.avatar = `/storage/${imagePath}`;
+      user.avatar = avatar;
       await user.save();
       res.json({ user: new UserDto(user), auth: true });
     } catch (err) {
